@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<style>
+  table {
+    border: 1px solid #444444;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #444444;
+    padding: 10px;
+    width:70px;
+    height:20px
+  }
+  .plusminus{
+  	width:40px;
+    height:40px;
+  	border-radius:50%;
+    text-align:center;
+  }
+</style>
+<body>
+<script type="text/javascript" src="index.js"></script>
+
+<h2>사용법</h3>
+<h4>1. 첫번재 열에 테마 이름</h4>
+
+<div>
+<table style="float:left" id=timetable>
+  <tr>
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>     
+  </tr>
+</table>
+<input class=plusminus id=addCol value=+ type=button onclick="change_table(this.id)" style="float:left;margin:10px"></div>
+<input class=plusminus id=removeCol value=- type=button onclick="change_table(this.id)" style="float:left;margin:10px"></div>
+</div>
+
+<input class=plusminus id=addRow value=+ type=button onclick="change_table(this.id)" style="clear:both;float:left;margin:10px"></div>
+<input class=plusminus id=removeRow value=- type=button onclick="change_table(this.id)" style="float:left;margin:10px"></div>
+
+</body>
+</html>
