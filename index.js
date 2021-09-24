@@ -83,6 +83,14 @@ class TimeTable {
         this.col = col
         this.start_time = document.getElementById(time_table_input_id_format.replace("%row%", row).replace("%col%", col * 2)).value
         this.end_time = document.getElementById(time_table_input_id_format.replace("%row%", row).replace("%col%", col * 2 + 1)).value
+
+        // 입력하지 않은 칸
+        if (this.start_time == "") {
+            this.start_time = '-9999'
+        }
+        if (this.end_time == "") {
+            this.end_time = '9999'
+        }
     }
 }
 
@@ -95,7 +103,7 @@ function search_dfs(col, total_col, total_row, cur_table_list, result) {
         return
     }
 
-    for (let i = 1; i < total_row; i++) { // row가 각각 다를 수 있음
+    for (let i = 1; i < total_row; i++) {
         cur_table_list.push(new TimeTable(i, col))
         search_dfs(col + 1, total_col, total_row, cur_table_list, result)
         cur_table_list.pop()
