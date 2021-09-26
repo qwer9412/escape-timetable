@@ -1,6 +1,7 @@
 const time_table_input_id_format = "tablecell%row%,%col%"
-const time_table_input_tag_str = "<input type=\"number\" id=\"" + time_table_input_id_format + "\" onchange=\"time_write(this)\" size=\"20\" style=\"width:100%; border: 0;\">"
-const time_table_input_tag_str_header = "<input type=\"text\" size=\"20\" style=\"width:100%; border: 0;\">"
+const time_table_input_tag_str = "<input type='number' id='" + time_table_input_id_format + "' onchange='time_write(this)' size='20' style='width:100%; border: 0;'>"
+const time_table_input_header_id_format = "head%col%"
+const time_table_input_tag_str_header = "<input type='text' id='" + time_table_input_header_id_format + "' size='20' style='width:100%; border: 0;'>"
 
 function change_table(click_id) {
 
@@ -22,7 +23,7 @@ function change_table(click_id) {
 
             if (i == 0) {
                 head_col_size = table.rows[0].getElementsByTagName('td').length
-                table.rows[0].getElementsByTagName('td')[head_col_size - 1].innerHTML += time_table_input_tag_str_header
+                table.rows[0].getElementsByTagName('td')[head_col_size - 1].innerHTML += time_table_input_tag_str_header.replace("%col%", head_col_size - 1)
             } else {
                 table.rows[i].getElementsByTagName('td')[body_col_size - 1].innerHTML
                     += time_table_input_tag_str.replace("%row%", i).replace("%col%", body_col_size - 1)
@@ -63,9 +64,7 @@ function search_group() {
     let total_row = document.getElementById('timetable').rows.length
     search_dfs(0, total_col, total_row, [], result)
 
-    for (let i = 0; i < result.length; i++) {
-        console.log(result[i])
-    }
+    show_result(result, total_col)
 }
 
 function time_write(time) {
@@ -128,4 +127,39 @@ function time_cmp(time_table_a, time_table_b) {
     if (time_table_a.start_time < time_table_b.start_time) return -1
     if (time_table_a.start_time == time_table_b.start_time) return 0
     if (time_table_a.start_time > time_table_b.start_time) return 1
+}
+
+function show_result(result, total_col) {
+
+    var result_table = document.createElement("table")
+    result_table.style.marginTop = "50px"
+
+    // 테마명
+    var head_tr = document.createElement("tr")
+    for (let i = 0; i < total_col; i++) {
+        var td = document.createElement("td")
+        td.setAttribute("colspan", "2")
+        td.innerHTML = document.getElementById(time_table_input_header_id_format.replace("%col%", i)).value
+        head_tr.appendChild(td)
+    }
+    result_table.appendChild(head_tr)
+
+    // 시간
+    for (let i = 0; i < result.length; i++) {
+        var tr = document.createElement("tr")
+
+        for (let j = 0; j < total_col; j++) {
+            var start_td = document.createElement("td")
+            var end_td = document.createElement("td")
+
+            start_td.innerHTML = result[i][j].start_time
+            end_td.innerHTML = result[i][j].end_time
+
+            tr.appendChild(start_td)
+            tr.appendChild(end_td)
+        }
+        result_table.appendChild(tr)
+    }
+
+    document.getElementsByTagName('body')[0].appendChild(result_table)
 }
