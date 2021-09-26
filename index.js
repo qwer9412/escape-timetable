@@ -59,12 +59,24 @@ function change_table(click_id) {
 }
 
 function search_group() {
+
+    clear_for_search()
+
     let result = []
     let total_col = document.getElementById('timetable').rows[0].getElementsByTagName('td').length
     let total_row = document.getElementById('timetable').rows.length
     search_dfs(0, total_col, total_row, [], result)
 
     show_result(result, total_col)
+}
+
+function clear_for_search() {
+    // 기존 결과 테이블 제거
+    var body = document.getElementsByTagName("body")[0]
+    var result_table = document.getElementById("result_table")
+    if (result_table != null) {
+        body.removeChild(result_table)
+    }
 }
 
 function time_write(time) {
@@ -84,11 +96,8 @@ class TimeTable {
         this.end_time = document.getElementById(time_table_input_id_format.replace("%row%", row).replace("%col%", col * 2 + 1)).value
 
         // 입력하지 않은 칸
-        if (this.start_time == "") {
-            this.start_time = '-9999'
-        }
-        if (this.end_time == "") {
-            this.end_time = '9999'
+        if (this.start_time == "" || this.end_time == "") {
+            throw "INVALID_TIME"
         }
     }
 }
@@ -103,7 +112,11 @@ function search_dfs(col, total_col, total_row, cur_table_list, result) {
     }
 
     for (let i = 1; i < total_row; i++) {
-        cur_table_list.push(new TimeTable(i, col))
+        try {
+            cur_table_list.push(new TimeTable(i, col))
+        } catch (e) {
+            continue
+        }
         search_dfs(col + 1, total_col, total_row, cur_table_list, result)
         cur_table_list.pop()
     }
@@ -133,6 +146,7 @@ function show_result(result, total_col) {
 
     var result_table = document.createElement("table")
     result_table.style.marginTop = "50px"
+    result_table.id = "result_table"
 
     // 테마명
     var head_tr = document.createElement("tr")
