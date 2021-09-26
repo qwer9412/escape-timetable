@@ -1,7 +1,9 @@
 const time_table_input_id_format = "tablecell%row%,%col%"
-const time_table_input_tag_str = "<input type='number' id='" + time_table_input_id_format + "' onchange='time_write(this)' size='20' style='width:100%; border: 0;'>"
+const time_table_input_tag_str = "<input type='text' id='" + time_table_input_id_format + "' onchange='time_write(this)' size='20' style='width:100%; border: 0;'>"
 const time_table_input_header_id_format = "head%col%"
 const time_table_input_tag_str_header = "<input type='text' id='" + time_table_input_header_id_format + "' size='20' style='width:100%; border: 0;'>"
+
+const time_pattern = /\d{4}/;
 
 function change_table(click_id) {
 
@@ -79,11 +81,17 @@ function clear_for_search() {
     }
 }
 
-function time_write(time) {
+function time_write(time_tag) {
 
-    if (time.value.length != 4) {
+    if (time_tag == null || time_tag.value == null || time_tag.value == '') {
+        return
+    }
+
+    var time = time_tag.value
+
+    if (time.length != 4 || !time_pattern.test(time)) {
         alert('시간이 잘못 입력 되었습니다.\n입력 예시\n오전9시 -> 0900\n오후9시 -> 2100')
-        time.value = ''
+        time_tag.value = ''
     }
 }
 
