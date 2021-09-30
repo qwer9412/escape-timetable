@@ -62,13 +62,19 @@ function change_table(click_id) {
 
 function search_group() {
 
+    // 검색 하기 전 화면 초기화
     clear_for_search()
 
+    // 검색 시작
     let result = []
     let total_col = document.getElementById('timetable').rows[0].getElementsByTagName('td').length
     let total_row = document.getElementById('timetable').rows.length
     search_dfs(0, total_col, total_row, [], result)
 
+    // 정렬
+    result = line_up_result(result)
+
+    // 출력
     show_result(result, total_col)
 }
 
@@ -148,6 +154,52 @@ function time_cmp(time_table_a, time_table_b) {
     if (time_table_a.start_time < time_table_b.start_time) return -1
     if (time_table_a.start_time == time_table_b.start_time) return 0
     if (time_table_a.start_time > time_table_b.start_time) return 1
+}
+
+function line_up_result(result) {
+
+    let order = document.getElementById('orderType').value
+
+    if (order == 'termMin') {
+        let result_with_term = []
+        for (let i = 0; i < result.length; i++) {
+            result_with_term.push(new TimeTableTerm(result[i]))
+        }
+        result_with_term.sort(function (a, b) { return a.term_sum - b.term_sum })
+        result = []
+        for (let i = 0; i < result_with_term.length; i++) {
+            result.push(result_with_term[i].list)
+        }
+    } else if (order == 'startFast') {
+        result.sort(function (a, b) { return get_min_start_time(a) - get_min_start_time(b) })
+    } else if (order == 'startSlow') {
+        result.sort(function (a, b) { return get_min_start_time(b) - get_min_start_time(a) })
+    }
+
+    return result
+}
+
+class TimeTableTerm {
+
+    constructor(list) {
+        this.list = list
+        this.term_sum = 0
+
+        let time_list = list.slice().sort(time_cmp)
+        for (let i = 0; i < time_list.length - 1; i++) {
+            let hour_term = time_list[i + 1].start_time.substr(0, 2) - time_list[i].end_time.substr(0, 2)
+            let min_term = time_list[i + 1].start_time.substr(2, 2) - time_list[i].end_time.substr(2, 2)
+            this.term_sum += hour_term * 60 + min_term
+        }
+    }
+}
+
+function get_min_start_time(list) {
+    let min = list[0].start_time
+    for (let i = 1; i < list.length; i++) {
+        min = Math.min(min, list[i].start_time)
+    }
+    return min
 }
 
 function show_result(result, total_col) {

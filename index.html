@@ -29,7 +29,8 @@
   <h4>1. +,- 버튼으로 테마 개수, 시간 개수 조정</h4>
   <h4>2. 첫번째 행에 테마 이름 기입</h4>
   <h4>3. 두번째 행부터 시간 기입(yymm)</h4>
-  <h4>4. 실행 버튼 클릭</h4>
+  <h4>4. 실행 버튼 옆에 정렬 기준 설정</h4>
+  <h4>5. 실행 버튼 클릭</h4>
 
   <div>
     <table style="display: inline-block;" id=timetable>
@@ -57,7 +58,15 @@
   <input class=plusminus id=removeRow value=- type=button onclick="change_table(this.id)"
     style="display: inline-block;">
 
-  <input value="실행" type=button onclick="search_group()" style="display: block;margin-top:20px">
+  <div>
+    <input value="실행" type=button onclick="search_group()" style="display: inline-block;margin-top:20px">
+
+    <select name="job" id="orderType"  style="display: inline-block">
+      <option value="termMin">테마 간의 간격 좁은 순</option>
+      <option value="startFast">시작 빠른 순</option>
+      <option value="startSlow">시작 느린 순</option>
+    </select>
+  </div>
 
 </body>
 
